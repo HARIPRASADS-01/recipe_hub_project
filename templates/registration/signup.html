@@ -1,0 +1,45 @@
+<!-- templates/registration/signup.html -->
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block title %} Register - Recipe Hub {% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-7 col-md-9"> {# Slightly wider than login #}
+        <div class="card shadow-sm border-0">
+             <div class="card-body p-4 p-md-5">
+                <h2 class="mb-4 text-center fw-bold">Create Your Account</h2>
+
+                <form method="post" novalidate>
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger alert-dismissible fade show small" role="alert">
+                            {% for error in form.non_field_errors %} {{ error }} {% endfor %}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="padding: 0.5rem 1rem;"></button>
+                        </div>
+                    {% endif %}
+
+                    {% for field in form %}
+                        <div class="form-floating mb-3"> {# Use floating labels #}
+                            {% render_field field class+="form-control" placeholder=field.label %}
+                             {% if field.errors %}{% render_field field class+="is-invalid" %}{% endif %}
+                             <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+
+                            {% if field.help_text %} <div class="form-text small ps-1" id="{{ field.id_for_label }}_help">{{ field.help_text|safe }}</div> {% endif %}
+                            {% if field.errors %} <div class="invalid-feedback d-block small ps-1"> {% for error in field.errors %} {{ error }} {% endfor %} </div> {% endif %}
+                        </div>
+                    {% endfor %}
+
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-success btn-lg">Sign Up</button>
+                    </div>
+                </form>
+                 <hr class="my-4">
+                 <div class="text-center small"> Already have an account? <a href="{% url 'login' %}">Login here</a>. </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

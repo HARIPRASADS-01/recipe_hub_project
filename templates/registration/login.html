@@ -1,0 +1,71 @@
+<!-- templates/registration/login.html -->
+{% extends "base.html" %}
+{% load widget_tweaks %} {# Ensure widget_tweaks is loaded #}
+
+{% block title %}Login - Recipe Hub{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8"> {# Slightly wider on medium screens #}
+        <div class="card shadow-sm border-0"> {# Remove border for cleaner look #}
+             <div class="card-body p-4 p-md-5"> {# More padding #}
+                <h2 class="mb-4 text-center fw-bold">Login</h2> {# Bolder heading #}
+
+                {% comment %} Display message if redirected from protected page {% endcomment %}
+                {% if next and not user.is_authenticated %}
+                    <div class="alert alert-info small" role="alert"> Please login to view the requested page. </div>
+                {% endif %}
+
+                <form method="post" action="{% url 'login' %}" novalidate>
+                    {% csrf_token %} {# Important for security #}
+
+                    {# Display non-field errors (e.g., invalid credentials) #}
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger alert-dismissible fade show small" role="alert">
+                            {% for error in form.non_field_errors %} {{ error }} {% endfor %}
+                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="padding: 0.5rem 1rem;"></button>
+                        </div>
+                    {% endif %}
+
+                    {# Username Field with Floating Label and Autofocus #}
+                    <div class="form-floating mb-3">
+                        {% render_field form.username class+="form-control" placeholder="Username" autofocus="autofocus" %} {# CORRECTED autofocus attribute #}
+                        <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+                         {% if form.username.errors %}
+                             <div class="invalid-feedback d-block small">
+                                {% for error in form.username.errors %} {{ error }} {% endfor %}
+                            </div>
+                         {% endif %}
+                    </div>
+
+                    {# Password Field with Floating Label #}
+                     <div class="form-floating mb-3">
+                        {% render_field form.password class+="form-control" placeholder="Password" %}
+                        <label for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
+                         {% if form.password.errors %}
+                             <div class="invalid-feedback d-block small">
+                                {% for error in form.password.errors %} {{ error }} {% endfor %}
+                            </div>
+                         {% endif %}
+                    </div>
+
+                    {# Submit Button #}
+                    <div class="d-grid gap-2 mt-4">
+                         <button type="submit" class="btn btn-primary btn-lg">Login</button>
+                    </div>
+
+                    {# Hidden field to handle redirects after login #}
+                    <input type="hidden" name="next" value="{{ next|default:'' }}">
+                </form>
+
+                {# Links for password reset and registration #}
+                 <hr class="my-4">
+                <div class="text-center small">
+                    <a href="{% url 'password_reset' %}">Forgot password?</a> |
+                    Don't have an account? <a href="{% url 'signup' %}">Register here</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

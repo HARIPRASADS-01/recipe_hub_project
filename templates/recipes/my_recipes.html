@@ -1,0 +1,47 @@
+<!-- recipes/templates/recipes/my_recipes.html -->
+{% extends "base.html" %}
+
+{% block title %} {{ page_title|default:"My Recipes" }} - Recipe Hub {% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">{{ page_title|default:"My Recipes" }}</h2>
+        <a href="{% url 'recipes:add_recipe' %}" class="btn btn-sm btn-success">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/></svg>
+            Add New Recipe
+        </a>
+    </div>
+
+    {% if recipes_page.object_list %}
+        <div class="list-group list-group-flush mb-4">
+            {% for recipe in recipes_page.object_list %}
+                 <a href="{% url 'recipes:recipe_detail' pk=recipe.pk %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center px-0 py-3">
+                    <div class="d-flex align-items-center">
+                         {% if recipe.image %}
+                            <img src="{{ recipe.image.url }}" alt="{{ recipe.title }}" class="rounded me-3" style="width: 80px; height: 60px; object-fit: cover;">
+                         {% else %}
+                            <div class="rounded me-3 bg-light d-flex align-items-center justify-content-center" style="width: 80px; height: 60px;">
+                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-image text-muted" viewBox="0 0 16 16"><path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/><path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z"/></svg>
+                            </div>
+                         {% endif %}
+                        <div>
+                            <h5 class="mb-1">{{ recipe.title }}</h5>
+                            <small class="text-muted">Added: {{ recipe.created_at|timesince }} ago | Updated: {{ recipe.updated_at|timesince}} ago</small>
+                        </div>
+                    </div>
+                    {# Optional: Could add edit/delete links directly here too #}
+                    <span class="badge bg-light text-dark rounded-pill ms-3">{{ recipe.prep_time|add:recipe.cook_time }} min</span>
+                </a>
+            {% endfor %}
+        </div>
+
+        {# Pagination Controls #}
+        {% include "_pagination.html" with page_obj=recipes_page %} {# Reuse pagination template #}
+
+    {% else %}
+        <div class="alert alert-secondary text-center">
+            You haven't added any recipes yet.
+            <a href="{% url 'recipes:add_recipe' %}" class="alert-link">Add your first recipe!</a>
+        </div>
+    {% endif %}
+{% endblock %}

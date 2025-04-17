@@ -1,0 +1,62 @@
+<!-- recipes/templates/recipes/recipe_form.html -->
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block title %} {{ page_title|default:"Recipe Form" }} - Recipe Hub {% endblock %}
+
+{% block content %}
+ <div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10"> {# Wider form area #}
+        <div class="card shadow-sm border-0 mb-4">
+             <div class="card-body p-4 p-md-5">
+                <h2 class="mb-4 text-center fw-bold">{{ page_title|default:"Submit Recipe" }}</h2>
+
+                <form method="post" enctype="multipart/form-data" novalidate>
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger alert-dismissible fade show small" role="alert">
+                            {% for error in form.non_field_errors %} {{ error }} {% endfor %}
+                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="padding: 0.5rem 1rem;"></button>
+                        </div>
+                    {% endif %}
+
+                    {# Render fields using floating labels #}
+                    {% for field in form %}
+                        {% if field.name == 'image' %} {# Special handling for file input #}
+                             <div class="mb-3">
+                                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                                {% render_field field class+="form-control" %}
+                                {% if field.errors %}{% render_field field class+="is-invalid" %}{% endif %}
+                                {% if field.help_text %} <div class="form-text small ps-1">{{ field.help_text|safe }}</div> {% endif %}
+                                {% if field.errors %} <div class="invalid-feedback d-block small ps-1"> {% for error in field.errors %} {{ error }} {% endfor %} </div> {% endif %}
+                            </div>
+                        {% else %}
+                             <div class="form-floating mb-3">
+                                {% render_field field class+="form-control" style="height: auto; min-height: calc(3.5rem + 2px);" placeholder=field.label %} {# Adjust height for textareas #}
+                                 {% if field.field.widget.input_type == 'textarea' %} {% render_field field style="height: 100px" %}{% endif %} {# Specific height for textarea #}
+                                 {% if field.errors %}{% render_field field class+="is-invalid" %}{% endif %}
+                                 <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+
+                                {% if field.help_text %} <div class="form-text small ps-1">{{ field.help_text|safe }}</div> {% endif %}
+                                {% if field.errors %} <div class="invalid-feedback d-block small ps-1"> {% for error in field.errors %} {{ error }} {% endfor %} </div> {% endif %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+
+                    <div class="d-grid gap-2 mt-4">
+                         <button type="submit" class="btn btn-primary btn-lg">
+                             {% if recipe %}Update{% else %}Submit{% endif %} Recipe
+                         </button>
+                         {% if recipe %}
+                             <a href="{% url 'recipes:recipe_detail' pk=recipe.pk %}" class="btn btn-outline-secondary">Cancel</a>
+                         {% else %}
+                             <a href="{% url 'recipes:recipe_list' %}" class="btn btn-outline-secondary">Cancel</a>
+                         {% endif %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
