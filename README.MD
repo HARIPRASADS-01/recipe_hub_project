@@ -2,10 +2,6 @@
 
 A feature-rich, interactive web application built with Django for browsing, creating, sharing, and managing culinary recipes. This project serves as a practical learning experience for Django development.
 
-<!-- Add a compelling screenshot of your running application here! -->
-<!-- ![Recipe Hub Screenshot](./docs/screenshot.png) -->
-![Recipe Hub Banner](assets/Recipe Hub Placeholder Banner.png)
-
 ---
 
 ## 📌 Key Features
