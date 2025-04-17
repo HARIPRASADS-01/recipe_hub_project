@@ -4,7 +4,7 @@ A feature-rich, interactive web application built with Django for browsing, crea
 
 <!-- Add a compelling screenshot of your running application here! -->
 <!-- ![Recipe Hub Screenshot](./docs/screenshot.png) -->
-![Recipe Hub Placeholder Banner](https://via.placeholder.com/800x300.png?text=Recipe+Hub+-+Add+Screenshot!)
+![Recipe Hub Banner](./assets/banner.png)
 
 ---
 
